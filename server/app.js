@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import userRouter from "./router/user.js";
-import chatRouter from "./router/user.js";
+import chatRouter from "./router/chat.js";
 import initSocket from "./connection/socket.js";
 
 const app = express();
@@ -11,6 +11,6 @@ app.use(cors());
 app.use("/auth", userRouter);
 app.use("/chat", chatRouter);
 
-// const server = app.listen(8080);
-// initSocket(server);
-app.listen(8080);
+const server = app.listen(8080);
+initSocket(server);
+// app.listen(8080);
