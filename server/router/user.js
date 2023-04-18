@@ -1,23 +1,16 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
+import * as userRepository from "../repository/user.js";
 
 const router = express.Router();
 
 const secret = "flkdjseir12453ljdfaojdfnDFEns";
 //abc123: $2b$12$AcAcn3skiYOS6CC8jOw7Ke93ufxbdczAW9b3HFY4qlg193WHTO2Za
-let users = [
-  {
-    id: "123",
-    username: "camilla",
-    password: "$2b$12$AcAcn3skiYOS6CC8jOw7Ke93ufxbdczAW9b3HFY4qlg193WHTO2Za",
-  },
-];
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const user = users.find((user) => user.username === username);
+  const user = await userRepository.findUserByName(username);
   if (!user) {
     return res.status(403).json({ message: "Invalid username or password." });
   }
@@ -34,11 +27,16 @@ router.post("/login", (req, res) => {
 
 router.post("/signup", async (req, res) => {
   const { username, password } = req.body;
-  const user = {
-    id: uuidv4(),
+  const isExist = await userRepository.findUserByName(username);
+
+  if (isExist) {
+    return res.status(403).json({ message: `이미 사용 중인 닉네임입니다.` });
+  }
+
+  const user = await userRepository.signup({
     username,
     password: bcrypt.hashSync(password, 10),
-  };
+  });
 
   const token = createJwtToken(user.id);
   res.status(201).json({ username, token });
