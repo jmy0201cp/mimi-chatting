@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -25,26 +27,39 @@ export default function LoginPage() {
       }),
     });
     const response = await data.json();
-    console.log(response);
+    const token = response.username;
+    if (!token) {
+      alert(`${response.message}`);
+      return;
+    }
+
+    if (token) {
+      localStorage.setItem("token", token);
+      console.log("토큰있음");
+      navigate("/chat/room");
+    }
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        value={username}
-        onChange={handleChange}
-      />
-      <input
-        type="password"
-        id="password"
-        name="password"
-        value={password}
-        onChange={handleChange}
-      />
-      <button>로그인</button>
-    </form>
+    <>
+      <form onSubmit={handleLogin}>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={username}
+          onChange={handleChange}
+        />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={password}
+          onChange={handleChange}
+        />
+        <button>로그인</button>
+      </form>
+      <Link to="/auth/signup">회원가입</Link>
+    </>
   );
 }
