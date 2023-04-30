@@ -1,12 +1,9 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import * as userRepository from "../repository/user.js";
+import * as chatRepository from "../repository/chat.js";
 
 const router = express.Router();
-
-const secret = "flkdjseir12453ljdfaojdfnDFEns";
-//abc123: $2b$12$AcAcn3skiYOS6CC8jOw7Ke93ufxbdczAW9b3HFY4qlg193WHTO2Za
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -21,8 +18,14 @@ router.post("/login", async (req, res) => {
       return res.status(403).json({ message: "Invalid username or password." });
     }
   }
-  const token = createJwtToken(user.id);
-  res.status(201).json({ username, token });
+
+  const isExist = await chatRepository.isExistUserInChatRoom(username);
+  if (isExist) {
+    return res.status(409).json({ message: `이미 접속 중인 유저입니다.` });
+  }
+
+  await chatRepository.addUserList(username);
+  res.status(201).json({ username });
 });
 
 router.post("/signup", async (req, res) => {
@@ -37,13 +40,8 @@ router.post("/signup", async (req, res) => {
     username,
     password: bcrypt.hashSync(password, 10),
   });
-
-  const token = createJwtToken(user.id);
-  res.status(201).json({ username, token });
+  await chatRepository.addUserList(username);
+  res.status(201).json({ username });
 });
 
 export default router;
-
-function createJwtToken(id) {
-  return jwt.sign({ id }, secret, { expiresIn: "2d" });
-}
