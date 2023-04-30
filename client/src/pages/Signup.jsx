@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import styles from "./LoginPage.module.css";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -22,6 +23,10 @@ export default function Signup() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    if (username === "" || password === "") {
+      alert("아이디와 비밀번호 모두 입력해주세요.");
+      return;
+    }
 
     if (password !== passwordCheck) {
       alert("비밀번호가 맞지 않습니다. 다시 확인해주세요.");
@@ -55,34 +60,52 @@ export default function Signup() {
 
   return (
     <>
-      <h2>회원가입</h2>
+      <header className={styles.topbar}>
+        <nav>
+          <div className={styles.container}>
+            <h2>회원가입</h2>
+          </div>
+        </nav>
+      </header>
       <form onSubmit={handleSignup}>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={username}
-          placeholder="닉네임을 입력해주세요."
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={password}
-          placeholder="비밀번호를 입력해주세요."
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          id="passwordCheck"
-          name="passwordCheck"
-          value={passwordCheck}
-          placeholder="비밀번호를 재입력해주세요."
-          onChange={handleChange}
-        />
-        <button>가입</button>
-        <Link to="/auth/login">취소</Link>
+        <div className={styles.bodyWrapper}>
+          <div className={styles.selectionContainer}>
+            <div className={styles.email}>
+              <div className={styles.selection}>
+                <input
+                  type="text"
+                  className={styles.username}
+                  name="username"
+                  value={username}
+                  placeholder="아이디"
+                  onChange={handleChange}
+                />
+                <input
+                  type="password"
+                  className={styles.password}
+                  name="password"
+                  placeholder="비밀번호"
+                  value={password}
+                  onChange={handleChange}
+                />
+                <input
+                  type="password"
+                  className={styles.passwordCheck}
+                  name="passwordCheck"
+                  value={passwordCheck}
+                  placeholder="비밀번호를 재입력해주세요."
+                  onChange={handleChange}
+                />
+                <div>
+                  <button className={styles.loginBtn}>가입</button>
+                  <Link to="/auth/login" className={styles.cancelBtn}>
+                    취소
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     </>
   );

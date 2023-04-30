@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -23,6 +24,11 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    if (username === "" || password === "") {
+      alert("아이디와 비밀번호 모두 입력해주세요.");
+      return;
+    }
+
     const data = await fetch(`${process.env.REACT_APP_BASE_HOST}/auth/login`, {
       method: "post",
       headers: {
@@ -35,6 +41,7 @@ export default function LoginPage() {
     });
     const response = await data.json();
     const token = response.username;
+
     if (!token) {
       alert(`${response.message}`);
       return;
@@ -48,24 +55,43 @@ export default function LoginPage() {
 
   return (
     <>
-      <form onSubmit={handleLogin}>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={username}
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={password}
-          onChange={handleChange}
-        />
-        <button>로그인</button>
+      <header className={styles.topbar}>
+        <nav>
+          <div className={styles.container}>
+            <h2>로그인</h2>
+          </div>
+        </nav>
+      </header>
+      <form onSubmit={handleLogin} className={styles.loginForm}>
+        <div className={styles.bodyWrapper}>
+          <div className={styles.selectionContainer}>
+            <div className={styles.email}>
+              <div className={styles.selection}>
+                <input
+                  type="text"
+                  className={styles.username}
+                  name="username"
+                  value={username}
+                  placeholder="아이디"
+                  onChange={handleChange}
+                />
+                <input
+                  type="password"
+                  className={styles.password}
+                  name="password"
+                  placeholder="비밀번호"
+                  value={password}
+                  onChange={handleChange}
+                />
+                <button className={styles.loginBtn}>로그인</button>
+                <Link to="/auth/signup" className={styles.signupBtn}>
+                  회원가입
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
-      <Link to="/auth/signup">회원가입</Link>
     </>
   );
 }
