@@ -2,11 +2,9 @@ import "./App.css";
 import LoginPage from "./pages/LoginPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from "./pages/Signup";
-import ChatRoom from "./component/ChatRoom";
+import ChatRoom from "./pages/ChatRoom";
 
 export default function App() {
-  // const token = localStorage.getItem("token");
-
   return (
     <BrowserRouter>
       <Routes>

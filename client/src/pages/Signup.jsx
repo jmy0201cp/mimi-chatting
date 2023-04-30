@@ -42,7 +42,6 @@ export default function Signup() {
     });
     const response = await data.json();
     const token = response.username;
-    console.log(response);
     if (!token) {
       alert(`${response.message}`);
       return;
@@ -50,36 +49,41 @@ export default function Signup() {
 
     if (token) {
       localStorage.setItem("token", token);
-      console.log("토큰있음");
       navigate("/chat/room");
     }
   };
 
   return (
-    <form onSubmit={handleSignup}>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        value={username}
-        onChange={handleChange}
-      />
-      <input
-        type="password"
-        id="password"
-        name="password"
-        value={password}
-        onChange={handleChange}
-      />
-      <input
-        type="password"
-        id="passwordCheck"
-        name="passwordCheck"
-        value={passwordCheck}
-        onChange={handleChange}
-      />
-      <button>가입</button>
-      <Link to="/auth/login">취소</Link>
-    </form>
+    <>
+      <h2>회원가입</h2>
+      <form onSubmit={handleSignup}>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={username}
+          placeholder="닉네임을 입력해주세요."
+          onChange={handleChange}
+        />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={password}
+          placeholder="비밀번호를 입력해주세요."
+          onChange={handleChange}
+        />
+        <input
+          type="password"
+          id="passwordCheck"
+          name="passwordCheck"
+          value={passwordCheck}
+          placeholder="비밀번호를 재입력해주세요."
+          onChange={handleChange}
+        />
+        <button>가입</button>
+        <Link to="/auth/login">취소</Link>
+      </form>
+    </>
   );
 }
