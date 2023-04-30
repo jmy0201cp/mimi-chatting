@@ -30,7 +30,7 @@ export default function Signup() {
       return;
     }
 
-    const data = await fetch(`http://localhost:8080/auth/signup`, {
+    const data = await fetch(`${process.env.REACT_APP_BASE_HOST}/auth/signup`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",

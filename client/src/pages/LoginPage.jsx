@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/chat/room");
+    }
+  });
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -16,7 +23,7 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const data = await fetch(`http://localhost:8080/auth/login`, {
+    const data = await fetch(`${process.env.REACT_APP_BASE_HOST}/auth/login`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +42,6 @@ export default function LoginPage() {
 
     if (token) {
       localStorage.setItem("token", token);
-      console.log("토큰있음");
       navigate("/chat/room");
     }
   };
