@@ -1,17 +1,44 @@
-import jwt from "jsonwebtoken";
+import mongoose, { Schema } from "mongoose";
 
-const secret = "flkdjseir12453ljdfaojdfnDFEns";
-let list = [
+let room = [];
+
+const chatSchema = new Schema(
   {
-    name: "Ellizabeth",
-    text: "나는 소중한 사람",
-    createdAt: new Date().toString(),
+    username: { type: String },
+    text: { type: String },
   },
-];
+  { timestamps: true }
+);
 
-export async function getAllList() {
-  return list;
-}
+const Chat = mongoose.model("Chat", chatSchema);
+
+//채팅 메세지 추가
 export async function addChatList(data) {
-  list = [...list, { ...data, createdAt: new Date().toString() }];
+  return new Chat(data).save();
+}
+
+//채팅
+export async function getAllList() {
+  return Chat.find();
+}
+
+//채팅방에 이사람이 들어가있나? 확인
+export async function isExistUserInChatRoom(name) {
+  return room.find((username) => username === name);
+}
+
+//채팅방에 입장하는 사람 추가
+export async function addUserList(user) {
+  return (room = [...room, user]);
+}
+
+//채팅방에서 퇴장하는 사람 추가
+export async function removeUserList(user) {
+  room = room.filter((username) => username != user);
+  return room;
+}
+
+//채팅방에 있는 사람들 가져오기
+export async function getChatUserList() {
+  return room;
 }
