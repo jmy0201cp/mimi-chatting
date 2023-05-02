@@ -8,13 +8,12 @@ header.topbar {
 }
 header.topbar nav {
   z-index: 999;
-  width: 100%;
-  height: 48px;
+  width: 300px;
+  display: flex;
+  margin: 0 auto;
   text-align: center;
-  line-height: 48px;
 }
 header.topbar .container {
-  width: 720px;
   margin: 0 auto;
   position: relative;
 }
