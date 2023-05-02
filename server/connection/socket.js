@@ -42,8 +42,15 @@ export default function initSocket(server) {
     socket.on("leave", async (user) => {
       console.log("퇴장");
       const msg = `${user}님이 퇴장했습니다.`;
-      console.log(msg);
+      const users = await chatRepository.getChatUserList();
+      console.log("요청");
+      console.log(users.length);
+
+      if (users.length === 1) {
+        await chatRepository.removeAllChatText();
+      }
       await chatRepository.removeUserList(user);
+
       socket.broadcast.emit("userMsg", { type: "disconnect", message: msg });
       socket.disconnect();
     });
